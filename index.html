@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PZ Book & Magazine Tracker</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAmACcDASIAAhEBAxEB/8QAHAAAAQQDAQAAAAAAAAAAAAAAAAECBQYDBAcI/8QAKhAAAgEEAQMDBAIDAAAAAAAAAQIDAAQFESESIjEGExQHMkFUYZJigvD/xAAZAQACAwEAAAAAAAAAAAAAAAADBAABBQL/xAAmEQABBAECBAcAAAAAAAAAAAABAAIDEQQSEwUhIkExYYGhweHx/9oADAMBAAIRAxEAPwDyN8m5/Yl/uack9250s8x/3NNt0ViS3IH4q4elsXiJ8ZNkbky3k1vJprKM+2qoenpldvuKFiVKqB+O9SV6hyzhhoCymoMTcYZHGmj1Kr1nZ5S8Wb4vzJ2hiaaT2gzCNF8u2vCjY2T4rRa4ulYq08wI/wAzXaGt/asInknXDY61mDgxuIkSRVGtaOjIFOxzJKyjydVzb1kMRdZIS4jfMY99hF7cTS7PUY18iMjRAIHJOlUaULw5mp1O/EZ2IJWkwtPL3+1X/k3P7Ev9zRWJgVYqw0RRT6zk+M8Fd62QQa38TkLmwvI7m2kMU8ZOjoEHY0QQeCCCQVOwQSCDsgxtPVt6BOiPBoE0WsJ7Dy9o6T4KayeSvspcC4v7qS4cL0p1HtRNkhEA4VRs6UAAfgU/D4nJZicw4yzkuGXXWw0qJvwWY9qj+SRUp9P7X0xMt5eeqbv24rYp7cAZtzFiQe1e5taG9Mut758VLZv6nPBAtj6UsY8Vbx/ZJ0qZR9uyNDpQ8EEgdwPPNAjgHdaWRxEs6YxXmfgKmercVdYPMyYu96DcQqpcqGA7lDa7gDwD/wAKKjry6uLyczXUzzSHy7sWJ41yTyfAop1ooUsGR5e4uPdYaKKKtcJS7FeksdUlFFRXdooooqKl/9k=">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Source+Code+Pro:wght@400;600&family=Crimson+Pro:wght@400;600&display=swap');
+
+  :root {
+    --bg: #1a1a18;
+    --paper: #2a2822;
+    --paper-light: #33312a;
+    --ink: #c4b99a;
+    --ink-dim: #7a7362;
+    --ink-faint: #4a4538;
+    --red: #8b3a3a;
+    --green: #4a6b3a;
+    --green-bright: #6a9b4a;
+    --blue: #3a5a7b;
+    --amber: #b89a5a;
+    --amber-dim: #7a6a3a;
+    --check: #5a8a4a;
+    --strike: #6a6252;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .header {
+    background: var(--paper);
+    border-bottom: 2px solid var(--ink-faint);
+    padding: 20px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top {
+    display: flex; align-items: baseline; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .header h1 {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.6rem; color: var(--ink);
+    letter-spacing: 1px; font-weight: normal;
+  }
+  .header h1 span { color: var(--ink-dim); font-size: 0.75em; }
+  .stats {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.8rem; color: var(--ink-dim);
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .stats .count { color: var(--amber); font-weight: 600; }
+  .controls {
+    display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+  }
+  .filter-btn {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.75rem; padding: 4px 10px;
+    background: var(--paper-light); border: 1px solid var(--ink-faint);
+    color: var(--ink-dim); cursor: pointer; transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--ink-dim); color: var(--ink); }
+  .filter-btn.active { background: var(--ink-faint); color: var(--ink); border-color: var(--ink-dim); }
+  .search-box {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.75rem; padding: 4px 10px;
+    background: var(--bg); border: 1px solid var(--ink-faint);
+    color: var(--ink); width: 200px; outline: none;
+  }
+  .search-box::placeholder { color: var(--ink-faint); }
+  .search-box:focus { border-color: var(--amber-dim); }
+
+  .content { max-width: 900px; margin: 0 auto; padding: 16px 24px 60px; }
+
+  /* Section labels (Skill Books / Recipe Magazines) */
+  .section-label {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.1rem; color: var(--ink-dim);
+    letter-spacing: 0.5px; padding: 16px 0 6px;
+    border-bottom: 1px solid var(--ink-faint);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .section-label .sc {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.7rem; color: var(--ink-faint);
+  }
+  .section-label .sc .done { color: var(--green-bright); }
+
+  /* Skill sub-labels (BLACKSMITHING, CARPENTRY, etc.) */
+  .skill-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.65rem; text-transform: uppercase;
+    letter-spacing: 2px; color: var(--ink-faint);
+    padding: 10px 0 4px 28px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    padding-right: 8px;
+    user-select: none;
+  }
+  .skill-label:hover { color: var(--ink-dim); }
+  .skill-label::after {
+    content: '▾';
+    font-size: 0.8rem; transition: transform 0.2s;
+  }
+  .skill-label.collapsed::after { transform: rotate(-90deg); }
+  .skill-items.collapsed { display: none; }
+
+  /* Items */
+  .item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 5px 0 5px 4px; cursor: pointer;
+    user-select: none; transition: background 0.1s;
+  }
+  .item:hover { background: var(--paper-light); }
+
+  .checkbox {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--ink-faint); background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.15s;
+  }
+  .item.checked .checkbox { background: var(--check); border-color: var(--check); }
+  .checkbox svg { width: 12px; height: 12px; opacity: 0; transition: opacity 0.15s; }
+  .item.checked .checkbox svg { opacity: 1; }
+
+  .item-vol {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.7rem; color: var(--ink-faint);
+    min-width: 80px; flex-shrink: 0;
+  }
+  .item.checked .item-vol { color: var(--ink-faint); }
+
+  .item-label {
+    font-size: 0.95rem; color: var(--ink);
+    transition: all 0.15s; flex: 1;
+  }
+  .item.checked .item-label { text-decoration: line-through; color: var(--strike); }
+
+  .item-tag {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.6rem; padding: 1px 5px;
+    border: 1px solid; flex-shrink: 0;
+  }
+  .tag-book { color: var(--blue); border-color: var(--blue); }
+  .tag-mag { color: var(--amber-dim); border-color: var(--amber-dim); }
+  .item.checked .item-tag { opacity: 0.4; }
+
+  .reset-area {
+    margin-top: 40px; padding-top: 20px;
+    border-top: 1px solid var(--ink-faint); text-align: center;
+  }
+  .reset-btn {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.7rem; padding: 6px 16px;
+    background: transparent; border: 1px solid var(--red);
+    color: var(--red); cursor: pointer; transition: all 0.15s;
+  }
+  .reset-btn:hover { background: var(--red); color: var(--ink); }
+
+  .item.hidden { display: none; }
+  .section-label.hidden { display: none; }
+  .skill-label.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <h1>Skill Books & Magazines <span>// Build 42</span></h1>
+    <div class="stats">
+      <span>Books: <span class="count" id="bookCount">0/0</span></span>
+      <span>Mags: <span class="count" id="magCount">0/0</span></span>
+      <span>Total: <span class="count" id="totalCount">0/0</span></span>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="unchecked">Remaining</button>
+    <button class="filter-btn" data-filter="checked">Found</button>
+    <button class="filter-btn" data-filter="book">Books Only</button>
+    <button class="filter-btn" data-filter="mag">Magazines Only</button>
+    <input type="text" class="search-box" placeholder="Search..." id="searchBox">
+  </div>
+</div>
+
+<div class="content" id="content"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA — Skill Books (24 skills × 5 volumes = 120)
+// Grouped by skill, sorted alphabetically by skill name
+// Levels: 1-2, 3-4, 5-6, 7-8, 9-10
+// ═══════════════════════════════════════════════════════
+
+const SKILL_BOOKS = [
+  { skill: "Agriculture", items: [
+    { vol: 1, title: 'Better Gardening', levels: '1–2' },
+    { vol: 2, title: 'Growing Food at Home', levels: '3–4' },
+    { vol: 3, title: 'Liam Keating\'s Subsistence Farming', levels: '5–6' },
+    { vol: 4, title: 'The Science of Crop Genetics and Yields', levels: '7–8' },
+    { vol: 5, title: 'USDA Guide to Agricultural Output Maximization', levels: '9–10' },
+  ]},
+  { skill: "Aiming", items: [
+    { vol: 1, title: 'Better Aiming', levels: '1–2' },
+    { vol: 2, title: 'Drawing and Shooting', levels: '3–4' },
+    { vol: 3, title: 'Leading Moving Targets', levels: '5–6' },
+    { vol: 4, title: 'Long Range Sniping Tactics', levels: '7–8' },
+    { vol: 5, title: 'Secrets From the World\'s Best Snipers', levels: '9–10' },
+  ]},
+  { skill: "Animal Care", items: [
+    { vol: 1, title: 'A Tale of St. Francis', levels: '1–2' },
+    { vol: 2, title: 'Animal Welfare Basics', levels: '3–4' },
+    { vol: 3, title: 'How Animals Think: A Helpful Guide', levels: '5–6' },
+    { vol: 4, title: 'The Wants and Needs of Diverse Fauna', levels: '7–8' },
+    { vol: 5, title: 'Wilds Tamed: An In-Depth Comparative', levels: '9–10' },
+  ]},
+  { skill: "Blacksmithing", items: [
+    { vol: 1, title: 'Elementary Forge Practice', levels: '1–2' },
+    { vol: 2, title: 'General Purpose Blacksmithing', levels: '3–4' },
+    { vol: 3, title: 'Old West Smiths and Their Secrets', levels: '5–6' },
+    { vol: 4, title: 'Really Hard Steel Co. Workers Handbook', levels: '7–8' },
+    { vol: 5, title: 'The Complete Encyclopedia of Metallurgy', levels: '9–10' },
+  ]},
+  { skill: "Butchering", items: [
+    { vol: 1, title: 'Butchering Basics', levels: '1–2' },
+    { vol: 2, title: 'From Chuck to Shank', levels: '3–4' },
+    { vol: 3, title: 'Hunter\'s Guide to Butchering', levels: '5–6' },
+    { vol: 4, title: 'Master Butcher\'s Complete Guide', levels: '7–8' },
+    { vol: 5, title: 'The Ergonomics of Tools in Meat Cutting Operations', levels: '9–10' },
+  ]},
+  { skill: "Carpentry", items: [
+    { vol: 1, title: 'A Guide to Nailing', levels: '1–2' },
+    { vol: 2, title: 'Carpentry, Woodcraft Style', levels: '3–4' },
+    { vol: 3, title: 'Hand Crafted Shelving and Storage', levels: '5–6' },
+    { vol: 4, title: 'Making Your Own Cabin From Scratch', levels: '7–8' },
+    { vol: 5, title: 'Site Joinery and Architectural Carpentry', levels: '9–10' },
+  ]},
+  { skill: "Carving", items: [
+    { vol: 1, title: 'Beginners Carving', levels: '1–2' },
+    { vol: 2, title: 'Cool Woodshaping Projects!', levels: '3–4' },
+    { vol: 3, title: 'Grinling Gibbons: His Life and Works', levels: '5–6' },
+    { vol: 4, title: 'Medieval Wood and Bone Carving Techniques', levels: '7–8' },
+    { vol: 5, title: 'The Art and Process of Natural Material Carving', levels: '9–10' },
+  ]},
+  { skill: "Cooking", items: [
+    { vol: 1, title: 'Better Burger Flipping', levels: '1–2' },
+    { vol: 2, title: 'Essential Home Cooking Guide', levels: '3–4' },
+    { vol: 3, title: 'Flavorful Cuisine - 1993 Edition', levels: '5–6' },
+    { vol: 4, title: 'Professional Tips from a Master Chef', levels: '7–8' },
+    { vol: 5, title: 'Ruban Vert Gourmet - Complete Cooking Techniques', levels: '9–10' },
+  ]},
+  { skill: "Electrical", items: [
+    { vol: 1, title: 'Basic Electronics', levels: '1–2' },
+    { vol: 2, title: 'Kentucky AV Guide \'93', levels: '3–4' },
+    { vol: 3, title: 'Practical Wiring Guide', levels: '5–6' },
+    { vol: 4, title: 'Telecommunications in the 20th Century', levels: '7–8' },
+    { vol: 5, title: 'Understanding Integrated Controls for Electronic Systems', levels: '9–10' },
+  ]},
+  { skill: "First Aid", items: [
+    { vol: 1, title: 'A Scouts Injury Guide', levels: '1–2' },
+    { vol: 2, title: 'Bandaging and Suturing', levels: '3–4' },
+    { vol: 3, title: 'Emergency Paramedics Manual', levels: '5–6' },
+    { vol: 4, title: 'Gray\'s Anatomy of the Human Body', levels: '7–8' },
+    { vol: 5, title: 'Surgical Techniques of the Operating Room', levels: '9–10' },
+  ]},
+  { skill: "Fishing", items: [
+    { vol: 1, title: 'Dean\'s Good Fishing Guide', levels: '1–2' },
+    { vol: 2, title: 'Fly Fishing, with JR Hartley', levels: '3–4' },
+    { vol: 3, title: 'Fresh and Saltwater Fishing', levels: '5–6' },
+    { vol: 4, title: 'Latest Rod and Net Techniques', levels: '7–8' },
+    { vol: 5, title: 'The Authoritative Kentucky Fishing Guide', levels: '9–10' },
+  ]},
+  { skill: "Foraging", items: [
+    { vol: 1, title: 'A Feast in the Forest', levels: '1–2' },
+    { vol: 2, title: 'Dean\'s Guide to Sticks & Stones', levels: '3–4' },
+    { vol: 3, title: 'Finding The Treasure in the Trash', levels: '5–6' },
+    { vol: 4, title: 'Survival Foraging: How Nature Can Save Your Life', levels: '7–8' },
+    { vol: 5, title: 'US Park Service Complete Nature Census - Kentucky', levels: '9–10' },
+  ]},
+  { skill: "Glassmaking", items: [
+    { vol: 1, title: 'Glass: A History', levels: '1–2' },
+    { vol: 2, title: 'From Sand to Glass: A Journey', levels: '3–4' },
+    { vol: 3, title: 'Laboratory Manual of Glassblowing', levels: '5–6' },
+    { vol: 4, title: 'Secrets of the Carlow Crystal Makers', levels: '7–8' },
+    { vol: 5, title: 'Venetian Glass: An Electron Microprobe Analysis', levels: '9–10' },
+  ]},
+  { skill: "Knapping", items: [
+    { vol: 1, title: 'Flint Knapping 101', levels: '1–2' },
+    { vol: 2, title: 'Guide to Kentucky Geology', levels: '3–4' },
+    { vol: 3, title: 'Lithic Technology Manual 1993', levels: '5–6' },
+    { vol: 4, title: 'Schmidt Rock Hardness Testing Techniques', levels: '7–8' },
+    { vol: 5, title: 'Technological Morphometrics of Clovis Artifacts', levels: '9–10' },
+  ]},
+  { skill: "Long Blade", items: [
+    { vol: 1, title: 'Cool Swords!', levels: '1–2' },
+    { vol: 2, title: 'Fencing: A History', levels: '3–4' },
+    { vol: 3, title: '"Old Sword-Play" by Alfred Hutton', levels: '5–6' },
+    { vol: 4, title: 'The Zettels of Johannes Liechtenauer', levels: '7–8' },
+    { vol: 5, title: 'Wear Analysis of Selected Medieval Swords', levels: '9–10' },
+  ]},
+  { skill: "Maintenance", items: [
+    { vol: 1, title: 'Basic Repairs', levels: '1–2' },
+    { vol: 2, title: 'Better Tools, Made Easy', levels: '3–4' },
+    { vol: 3, title: 'Home Guide to Tool Repairs', levels: '5–6' },
+    { vol: 4, title: 'Maintaining High Grade Tools', levels: '7–8' },
+    { vol: 5, title: 'Understanding Biomechanics of Tool Use', levels: '9–10' },
+  ]},
+  { skill: "Masonry", items: [
+    { vol: 1, title: 'A Bricklayer\'s Life', levels: '1–2' },
+    { vol: 2, title: 'Flooring: Do It Yourself', levels: '3–4' },
+    { vol: 3, title: 'Dibnah\'s Guide to Bricks', levels: '5–6' },
+    { vol: 4, title: 'Secrets of a Professional Mason', levels: '7–8' },
+    { vol: 5, title: 'Statistical Analysis of Historic Masonry Constructions', levels: '9–10' },
+  ]},
+  { skill: "Mechanics", items: [
+    { vol: 1, title: 'Carzone\'s Repair Guide', levels: '1–2' },
+    { vol: 2, title: 'How Vehicle Engines Work', levels: '3–4' },
+    { vol: 3, title: 'Laine\'s Repair Manual \'93', levels: '5–6' },
+    { vol: 4, title: 'Long Term Vehicle Maintenance', levels: '7–8' },
+    { vol: 5, title: 'Mastering Automotive Fault Diagnosis Techniques', levels: '9–10' },
+  ]},
+  { skill: "Pottery", items: [
+    { vol: 1, title: 'Ancient Pottery', levels: '1–2' },
+    { vol: 2, title: 'Build Your Own Kiln', levels: '3–4' },
+    { vol: 3, title: 'Glazing Ceramics at Home', levels: '5–6' },
+    { vol: 4, title: 'Ming Chinese Masterworks: A Guide', levels: '7–8' },
+    { vol: 5, title: 'Pyrometamorphic Process of Ceramic Materials', levels: '9–10' },
+  ]},
+  { skill: "Reloading", items: [
+    { vol: 1, title: 'Basic Reloading', levels: '1–2' },
+    { vol: 2, title: 'Dead Man\'s Click', levels: '3–4' },
+    { vol: 3, title: 'Jungle Style Reloading', levels: '5–6' },
+    { vol: 4, title: 'Strippers, Speedloaders, and Bolt Action', levels: '7–8' },
+    { vol: 5, title: 'The Ultimate Encyclopedia of Reloading Techniques', levels: '9–10' },
+  ]},
+  { skill: "Tailoring", items: [
+    { vol: 1, title: 'Basic Clothing Repair', levels: '1–2' },
+    { vol: 2, title: 'From Rags to Royalty: A Sewing Guide', levels: '3–4' },
+    { vol: 3, title: 'Haute Couture Tailoring Methods', levels: '5–6' },
+    { vol: 4, title: 'Modern Patterns from the Catwalks of Paris', levels: '7–8' },
+    { vol: 5, title: 'Textile Production and Manufacturing Techniques', levels: '9–10' },
+  ]},
+  { skill: "Tracking", items: [
+    { vol: 1, title: 'Animal Pawprints', levels: '1–2' },
+    { vol: 2, title: 'Hunting with Hemingway', levels: '3–4' },
+    { vol: 3, title: 'Long Range Animal Tracking', levels: '5–6' },
+    { vol: 4, title: 'The Smell of Ivory: An African Adventure', levels: '7–8' },
+    { vol: 5, title: 'Understanding Animal Behavior Through Spoor Placement', levels: '9–10' },
+  ]},
+  { skill: "Trapping", items: [
+    { vol: 1, title: 'Basic Pest Control', levels: '1–2' },
+    { vol: 2, title: 'Better Trapping, with Dean', levels: '3–4' },
+    { vol: 3, title: 'Park Rangers Wildlife Handbook \'93', levels: '5–6' },
+    { vol: 4, title: 'Research on Rodents and Mammals of Kentucky', levels: '7–8' },
+    { vol: 5, title: 'The Encyclopedia of Applied Animal Psychology', levels: '9–10' },
+  ]},
+  { skill: "Welding", items: [
+    { vol: 1, title: 'Basics of Welding', levels: '1–2' },
+    { vol: 2, title: 'Building with Metal', levels: '3–4' },
+    { vol: 3, title: 'Machining Metal: The Mass Genfac Guide', levels: '5–6' },
+    { vol: 4, title: 'Ore to Sheets: A Complete Metalworking Manual', levels: '7–8' },
+    { vol: 5, title: 'Technological Fundamentals of Metal Fabrication', levels: '9–10' },
+  ]},
+];
+
+// ═══════════════════════════════════════════════════════
+// DATA — Recipe Magazines (87)
+// Grouped by ItemID category prefix, sorted alphabetically
+// ═══════════════════════════════════════════════════════
+
+const MAGAZINES = [
+  { category: "Armor", items: [
+    'Armor in the Iron Age',
+    'Early Indigenous Armor - An In-Depth Study',
+    'European Armor in the Late Medieval Era',
+    'FBI Incident Report: San Fernando Bank Robbery',
+    'Outfit Apocalypse',
+    'Secrets of the Outback Outlaws',
+    'Strange Histories - Siberian Bear Hunting',
+  ]},
+  { category: "Cooking", items: [
+    'Delicious Meals - June 1993',
+    'Good Cooking - June 1993',
+    'Good Cooking - May 1993',
+    'Grandma\'s Kitchen',
+    'Italian Delights',
+    'World Cooking',
+  ]},
+  { category: "Electronics", items: [
+    'Home Security Monthly',
+    'How to Use Generators',
+    'Like Clockwork',
+    'Sparky\'s Lighting Guide',
+    'Zapper!',
+  ]},
+  { category: "Engineer", items: [
+    'Real Spy Secrets - June 1993',
+    'The Cheapskate\'s John Spiral - Chemical Warfare',
+    'The Cheapskate\'s John Spiral - Homemade Explosives',
+  ]},
+  { category: "Farming", items: [
+    'American Homesteading',
+    'Blooms and Blossoms',
+    'Cropping for Cash',
+    'Growing Your Own',
+    'Herbal Remedy Growing',
+    'Kentucky Farmer - June 1993',
+    'Kentucky Farmer - May 1993',
+    'The Farmers Guide',
+    'Thyme Time',
+  ]},
+  { category: "Fishing", items: [
+    'Angler USA - June 1993',
+    'Angler USA - May 1993',
+  ]},
+  { category: "Glassmaking", items: [
+    'Bottle Making at Home',
+    'Carlow Crystal Guide',
+    'Murano Glass Manual',
+  ]},
+  { category: "Hemp", items: [
+    'Legalize It!',
+  ]},
+  { category: "Herbalist", items: [
+    'Wilderness Survival',
+  ]},
+  { category: "Hunting", items: [
+    'Get Stuffed',
+    'Small Game Hunting',
+    'The Hunter',
+    'Wildlife Preserve',
+  ]},
+  { category: "Key", items: [
+    'The Cheapskate\'s John Spiral - Escaping Captivity',
+  ]},
+  { category: "Knitting", items: [
+    'Woolly Yarns - June 1993',
+    'Woolly Yarns - May 1993',
+  ]},
+  { category: "Mechanic", items: [
+    'Laines Commercial Auto Manual',
+    'Laines Performance Auto Manual',
+    'Laines Standard Auto Manual',
+  ]},
+  { category: "Metalwork", items: [
+    'Welder Monthly - April 1993',
+    'Welder Monthly - June 1993',
+    'Welder Monthly - March 1993',
+    'Welder Monthly - May 1993',
+  ]},
+  { category: "Primitive Tools", items: [
+    'Cultures of Prehistory',
+    'Pioneering Carvers',
+    'Tool Use of Early Man',
+  ]},
+  { category: "Radio", items: [
+    'Guerilla Radio - June 1993',
+    'Guerilla Radio - May 1993',
+    'Sparky\'s Radio Guide',
+  ]},
+  { category: "Smithing", items: [
+    'American Bladecraft',
+    'Blunt Forge',
+    'Everyday Smithing - April 1993',
+    'Everyday Smithing - June 1993',
+    'Everyday Smithing - May 1993',
+    'Iron Age Blacksmithing',
+    'Medieval Armory - June 1993',
+    'Medieval Armory - May 1993',
+    'Medieval Blacksmithing',
+    'Modern Blacksmithing at Home',
+    'Small-Scale Smithing',
+  ]},
+  { category: "Tailoring", items: [
+    'Alpine Explorers',
+    'Ancient Tailoring',
+    'Cowboy Living',
+    'Fun in the Woods!',
+    'Homespun',
+    'Leather Crafts',
+    'Medieval Peasant Clothing',
+    'Outdoor Gear, Done Right',
+    'Punk Fashion - From Trash to Thrash',
+    'Real Gladiators',
+  ]},
+  { category: "Trick", items: [
+    'Real Spy Secrets - May 1993',
+    'The Cheapskate\'s John Spiral - Forging New Identities',
+  ]},
+  { category: "Weapon", items: [
+    'Bloody Japanese Wrestling Deathmatch!',
+    'No Man\'s Land',
+    'Revolting Peasants',
+    'The Cheapskate\'s John Spiral - Prison Defense',
+    'The Cheapskate\'s John Spiral - Street Violence',
+    'The First Weapons',
+    'The Louisville Bruiser',
+  ]},
+];
+
+// ═══════════════════════════════════════════════════════
+// STORAGE (persistent across sessions)
+// ═══════════════════════════════════════════════════════
+
+const SK = 'pz-tracker-v4';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(SK)) || {}; }
+  catch { return {}; }
+}
+
+function saveState(s) {
+  localStorage.setItem(SK, JSON.stringify(s));
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+
+const chk = `<svg viewBox="0 0 12 12" fill="none" stroke="#1a1a18" stroke-width="2" stroke-linecap="round"><path d="M2 6l3 3 5-5"/></svg>`;
+const roman = ['I','II','III','IV','V'];
+
+let state = {};
+let filter = 'all';
+let query = '';
+
+function mid(s) { return s.replace(/[^a-zA-Z0-9]/g, '_'); }
+
+function build() {
+  const el = document.getElementById('content');
+  el.innerHTML = '';
+
+  // ── Skill Books ──
+  const bkLbl = document.createElement('div');
+  bkLbl.className = 'section-label';
+  bkLbl.dataset.sectionType = 'book';
+  bkLbl.innerHTML = `<span>Skill Books</span><span class="sc" id="bkSc"></span>`;
+  el.appendChild(bkLbl);
+
+  SKILL_BOOKS.forEach(sg => {
+    const groupKey = `collapse_book_${mid(sg.skill)}`;
+    const isCollapsed = !!state[groupKey];
+
+    const lbl = document.createElement('div');
+    lbl.className = 'skill-label' + (isCollapsed ? ' collapsed' : '');
+    lbl.dataset.skill = sg.skill;
+    lbl.dataset.sectionType = 'book';
+    lbl.textContent = sg.skill;
+
+    const itemsDiv = document.createElement('div');
+    itemsDiv.className = 'skill-items' + (isCollapsed ? ' collapsed' : '');
+    itemsDiv.dataset.skill = sg.skill;
+
+    lbl.addEventListener('click', () => {
+      const c = lbl.classList.toggle('collapsed');
+      itemsDiv.classList.toggle('collapsed', c);
+      if (c) state[groupKey] = true; else delete state[groupKey];
+      saveState(state);
+    });
+
+    el.appendChild(lbl);
+
+    sg.items.forEach(b => {
+      const id = `book_${mid(sg.skill)}_${b.vol}`;
+      const ck = state[id] || false;
+      const it = document.createElement('div');
+      it.className = `item${ck ? ' checked' : ''}`;
+      it.dataset.id = id;
+      it.dataset.type = 'book';
+      it.dataset.skill = sg.skill;
+      it.dataset.search = `${sg.skill} ${b.title} ${b.levels}`.toLowerCase();
+      it.innerHTML = `
+        <div class="checkbox">${chk}</div>
+        <div class="item-vol">Vol. ${b.vol} (${b.levels})</div>
+        <div class="item-label">${sg.skill} ${roman[b.vol-1]}: "${b.title}"</div>
+        <div class="item-tag tag-book">BOOK</div>
+      `;
+      it.addEventListener('click', () => toggle(id, it));
+      itemsDiv.appendChild(it);
+    });
+
+    el.appendChild(itemsDiv);
+  });
+
+  // ── Magazines ──
+  const mgLbl = document.createElement('div');
+  mgLbl.className = 'section-label';
+  mgLbl.dataset.sectionType = 'mag';
+  mgLbl.innerHTML = `<span>Recipe Magazines</span><span class="sc" id="mgSc"></span>`;
+  el.appendChild(mgLbl);
+
+  MAGAZINES.forEach(mg => {
+    const groupKey = `collapse_mag_${mid(mg.category)}`;
+    const isCollapsed = !!state[groupKey];
+
+    const lbl = document.createElement('div');
+    lbl.className = 'skill-label' + (isCollapsed ? ' collapsed' : '');
+    lbl.dataset.skill = mg.category;
+    lbl.dataset.sectionType = 'mag';
+    lbl.textContent = mg.category;
+
+    const itemsDiv = document.createElement('div');
+    itemsDiv.className = 'skill-items' + (isCollapsed ? ' collapsed' : '');
+    itemsDiv.dataset.skill = mg.category;
+
+    lbl.addEventListener('click', () => {
+      const c = lbl.classList.toggle('collapsed');
+      itemsDiv.classList.toggle('collapsed', c);
+      if (c) state[groupKey] = true; else delete state[groupKey];
+      saveState(state);
+    });
+
+    el.appendChild(lbl);
+
+    mg.items.forEach(m => {
+      const id = `mag_${mid(m)}`;
+      const ck = state[id] || false;
+      const it = document.createElement('div');
+      it.className = `item${ck ? ' checked' : ''}`;
+      it.dataset.id = id;
+      it.dataset.type = 'mag';
+      it.dataset.skill = mg.category;
+      it.dataset.search = `${mg.category} ${m}`.toLowerCase();
+      it.innerHTML = `
+        <div class="checkbox">${chk}</div>
+        <div class="item-label">${m}</div>
+        <div class="item-tag tag-mag">MAG</div>
+      `;
+      it.addEventListener('click', () => toggle(id, it));
+      itemsDiv.appendChild(it);
+    });
+
+    el.appendChild(itemsDiv);
+  });
+
+  // ── Reset ──
+  const ra = document.createElement('div');
+  ra.className = 'reset-area';
+  ra.innerHTML = `<button class="reset-btn" id="resetBtn">Reset All Progress</button>`;
+  el.appendChild(ra);
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (confirm('Reset all checkmarks? This cannot be undone.')) {
+      state = {};
+      saveState(state);
+      build();
+    }
+  });
+
+  applyFilters();
+  counts();
+}
+
+function toggle(id, el) {
+  state[id] = !state[id];
+  if (!state[id]) delete state[id];
+  saveState(state);
+  el.classList.toggle('checked');
+  counts();
+  applyFilters();
+}
+
+function counts() {
+  let bt=0, bd=0, mt=0, md=0;
+  document.querySelectorAll('.item').forEach(i => {
+    if (i.dataset.type === 'book') { bt++; if (i.classList.contains('checked')) bd++; }
+    else { mt++; if (i.classList.contains('checked')) md++; }
+  });
+  document.getElementById('bookCount').textContent = `${bd}/${bt}`;
+  document.getElementById('magCount').textContent = `${md}/${mt}`;
+  document.getElementById('totalCount').textContent = `${bd+md}/${bt+mt}`;
+  const bs = document.getElementById('bkSc');
+  if (bs) bs.innerHTML = `<span class="done">${bd}</span>/${bt}`;
+  const ms = document.getElementById('mgSc');
+  if (ms) ms.innerHTML = `<span class="done">${md}</span>/${mt}`;
+}
+
+function applyFilters() {
+  document.querySelectorAll('.item').forEach(i => {
+    let show = true;
+    const ck = i.classList.contains('checked');
+    const tp = i.dataset.type;
+    const sr = i.dataset.search;
+    if (filter === 'checked' && !ck) show = false;
+    if (filter === 'unchecked' && ck) show = false;
+    if (filter === 'book' && tp !== 'book') show = false;
+    if (filter === 'mag' && tp !== 'mag') show = false;
+    if (query && !sr.includes(query)) show = false;
+    i.classList.toggle('hidden', !show);
+  });
+
+  // Hide section labels if empty
+  document.querySelectorAll('.section-label').forEach(l => {
+    const tp = l.dataset.sectionType;
+    const vis = document.querySelectorAll(`.item[data-type="${tp}"]:not(.hidden)`);
+    l.classList.toggle('hidden', vis.length === 0);
+  });
+
+  // Hide skill sub-labels if all their items hidden
+  document.querySelectorAll('.skill-label').forEach(l => {
+    const itemsDiv = l.nextElementSibling;
+    if (!itemsDiv || !itemsDiv.classList.contains('skill-items')) return;
+    const hasVis = [...itemsDiv.querySelectorAll('.item')].some(i => !i.classList.contains('hidden'));
+    l.classList.toggle('hidden', !hasVis);
+  });
+}
+
+document.querySelectorAll('.filter-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    filter = b.dataset.filter;
+    applyFilters();
+  });
+});
+
+document.getElementById('searchBox').addEventListener('input', e => {
+  query = e.target.value.toLowerCase().trim();
+  applyFilters();
+});
+
+state = loadState();
+build();
+</script>
+</body>
+</html>
