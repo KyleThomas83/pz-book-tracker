@@ -33,15 +33,17 @@
     font-family: 'Crimson Pro', Georgia, serif;
     font-size: 16px;
     line-height: 1.5;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   .header {
     background: var(--paper);
     border-bottom: 2px solid var(--ink-faint);
     padding: 20px 24px;
-    position: sticky;
-    top: 0;
+    flex-shrink: 0;
     z-index: 100;
   }
   .header-top {
@@ -170,30 +172,341 @@
   .item.hidden { display: none; }
   .section-label.hidden { display: none; }
   .skill-label.hidden { display: none; }
+
+  /* ── Two-panel layout ── */
+  .app-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: var(--paper);
+    border-right: 1px solid var(--ink-faint);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.2s, min-width 0.2s;
+    flex-shrink: 0;
+  }
+  .sidebar.collapsed {
+    width: 50px;
+    min-width: 50px;
+  }
+  .sidebar-nav-label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--ink-faint);
+    padding: 20px 16px 8px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .sidebar.collapsed .sidebar-nav-label { opacity: 0; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.72rem;
+    color: var(--ink-dim);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .nav-item:hover {
+    background: var(--paper-light);
+    color: var(--ink);
+  }
+  .nav-item.active {
+    color: var(--amber);
+    border-left-color: var(--amber);
+    background: var(--paper-light);
+  }
+  .nav-item.coming-soon {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .nav-item.coming-soon:hover {
+    background: transparent;
+    color: var(--ink-dim);
+  }
+  .nav-icon {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    width: 18px;
+    text-align: center;
+  }
+  .nav-text { overflow: hidden; }
+  .sidebar.collapsed .nav-text { display: none; }
+  .nav-divider {
+    height: 1px;
+    background: var(--ink-faint);
+    margin: 8px 14px;
+    flex-shrink: 0;
+  }
+  .sidebar.collapsed .nav-divider { margin: 8px 10px; }
+
+  /* ── Main scrollable area ── */
+  .main-area {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* ── Pages ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Placeholder pages ── */
+  .placeholder-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    gap: 16px;
+    color: var(--ink-faint);
+  }
+  .placeholder-page .ph-title {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.4rem;
+    color: var(--ink-dim);
+    letter-spacing: 2px;
+  }
+  .placeholder-page .ph-sub {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+  }
+
+  /* ── Nav image icons ── */
+  .nav-icon img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    flex-shrink: 0;
+    display: block;
+  }
+  .sidebar.collapsed .nav-icon img { width: 22px; height: 22px; }
+  /* dark-bg sprites: screen removes the near-black backdrop */
+  .nav-item[data-page="books"] .nav-icon img,
+  .nav-item[data-page="magazines"] .nav-icon img { mix-blend-mode: screen; }
+  .nav-item[data-page="schematics"] .nav-icon img { mix-blend-mode: screen; }
+  .nav-item[data-page="adventure-gear"] .nav-icon img,
+  .nav-item[data-page="chores"] .nav-icon img { mix-blend-mode: screen; }
+
+  /* ── Schem tag ── */
+  .tag-schem { color: var(--green-bright); border-color: var(--green-bright); }
+
+  /* ── Header toggle button ── */
+  .sidebar-toggle {
+    background: transparent;
+    border: 1px solid var(--ink-faint);
+    color: var(--ink-dim);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 4px 9px;
+    line-height: 1;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .sidebar-toggle:hover { border-color: var(--ink-dim); color: var(--ink); }
+
+  /* ── Clear search button ── */
+  .clear-btn {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.75rem; padding: 4px 9px;
+    background: transparent; border: 1px solid var(--ink-faint);
+    color: var(--ink-dim); cursor: pointer; transition: all 0.15s;
+    line-height: 1;
+  }
+  .clear-btn:hover { border-color: var(--ink-dim); color: var(--ink); }
+
+  /* ── Adventure Gear / Todo pages ── */
+  .todo-content { max-width: 700px; margin: 0 auto; padding: 16px 24px 60px; }
+  .todo-period {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.1rem; color: var(--ink-dim);
+    letter-spacing: 0.5px; padding: 20px 0 8px;
+    border-bottom: 1px solid var(--ink-faint);
+    margin-bottom: 4px;
+  }
+  .item-body { display: flex; flex-direction: column; flex: 1; }
+  .item-sub {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.65rem; color: var(--ink-faint);
+    margin-top: 2px; font-style: italic;
+  }
+  .item.checked .item-sub { opacity: 0.5; }
+
+  /* ── Monthly reflection block ── */
+  .todo-reflection {
+    margin-top: 12px;
+    padding: 14px 18px;
+    border: 1px solid var(--ink-faint);
+    background: var(--paper-light);
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 0.95rem;
+    color: var(--ink-dim);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* ── Editable todo list controls ── */
+  .todo-delete-btn {
+    background: transparent;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 2px 6px;
+    line-height: 1;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.15s, color 0.15s;
+  }
+  .item:hover .todo-delete-btn { opacity: 1; }
+  .todo-delete-btn:hover { color: var(--red); }
+
+  .todo-add-row {
+    display: flex;
+    gap: 6px;
+    padding: 6px 0 6px 4px;
+    margin-top: 2px;
+    flex-wrap: wrap;
+  }
+  .todo-add-input {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    background: var(--bg);
+    border: 1px solid var(--ink-faint);
+    color: var(--ink);
+    outline: none;
+    min-width: 0;
+  }
+  .todo-add-input.input-label { flex: 2; }
+  .todo-add-input.input-sub   { flex: 3; }
+  .todo-add-input::placeholder { color: var(--ink-faint); }
+  .todo-add-input:focus { border-color: var(--amber-dim); }
+  .todo-add-btn {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    background: transparent;
+    border: 1px solid var(--ink-faint);
+    color: var(--ink-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .todo-add-btn:hover { border-color: var(--amber-dim); color: var(--amber); }
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="header-top">
-    <h1>Skill Books & Magazines <span>// Build 42</span></h1>
-    <div class="stats">
-      <span>Books: <span class="count" id="bookCount">0/0</span></span>
-      <span>Mags: <span class="count" id="magCount">0/0</span></span>
-      <span>Total: <span class="count" id="totalCount">0/0</span></span>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="sidebar-toggle" id="sidebarToggle" title="Toggle navigation">&#9776;</button>
+      <h1>Project Zomboid PDA <span>// Build 42</span></h1>
+    </div>
+    <div class="stats" id="headerStats">
+      <span id="statBooks">Books: <span class="count" id="bookCount">0/0</span></span>
+      <span id="statMags">Magazines: <span class="count" id="magCount">0/0</span></span>
+      <span id="statSchems">Schematics: <span class="count" id="schemCount">0/0</span></span>
     </div>
   </div>
   <div class="controls">
     <button class="filter-btn active" data-filter="all">All</button>
     <button class="filter-btn" data-filter="unchecked">Remaining</button>
     <button class="filter-btn" data-filter="checked">Found</button>
-    <button class="filter-btn" data-filter="book">Books Only</button>
-    <button class="filter-btn" data-filter="mag">Magazines Only</button>
     <input type="text" class="search-box" placeholder="Search..." id="searchBox">
+    <button class="clear-btn" id="clearSearch" title="Clear search">&#x2715;</button>
   </div>
 </div>
 
-<div class="content" id="content"></div>
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-nav-label">To Do List</div>
+    <a class="nav-item" data-page="adventure-gear" href="#">
+      <span class="nav-icon"><img src="Hatchet.png" alt="Adventure Gear"></span>
+      <span class="nav-text">Adventure Gear</span>
+    </a>
+    <a class="nav-item" data-page="chores" href="#">
+      <span class="nav-icon"><img src="bucket.png" alt="Chores"></span>
+      <span class="nav-text">Chores</span>
+    </a>
+
+    <div class="nav-divider"></div>
+    <div class="sidebar-nav-label">Stuff</div>
+    <a class="nav-item active" data-page="books" href="#">
+      <span class="nav-icon"><img src="Book.png" alt="Books"></span>
+      <span class="nav-text">Skill Books</span>
+    </a>
+    <a class="nav-item" data-page="magazines" href="#">
+      <span class="nav-icon"><img src="mag.png" alt="Magazines"></span>
+      <span class="nav-text">Magazines</span>
+    </a>
+    <a class="nav-item" data-page="schematics" href="#">
+      <span class="nav-icon"><img src="Schem.png" alt="Schematics"></span>
+      <span class="nav-text">Schematics</span>
+    </a>
+
+    <div class="nav-divider"></div>
+    <div class="sidebar-nav-label">Planning &amp; RPG</div>
+    <a class="nav-item coming-soon" data-page="map" href="#">
+      <span class="nav-icon">&#9711;</span>
+      <span class="nav-text">Map Notes</span>
+    </a>
+    <a class="nav-item coming-soon" data-page="lore" href="#">
+      <span class="nav-icon">&#9672;</span>
+      <span class="nav-text">Lore Journal</span>
+    </a>
+
+  </aside>
+  <main class="main-area">
+    <div class="page active" id="page-books">
+      <div class="content" id="book-content"></div>
+    </div>
+    <div class="page" id="page-magazines">
+      <div class="content" id="mag-content"></div>
+    </div>
+    <div class="page" id="page-schematics">
+      <div class="content" id="schem-content"></div>
+    </div>
+    <div class="page" id="page-adventure-gear">
+      <div class="todo-content" id="gear-content"></div>
+    </div>
+    <div class="page" id="page-chores">
+      <div class="todo-content" id="chores-content"></div>
+    </div>
+    <div class="page" id="page-map">
+      <div class="placeholder-page">
+        <div class="ph-title">Map Notes</div>
+        <div class="ph-sub">// coming soon</div>
+      </div>
+    </div>
+    <div class="page" id="page-lore">
+      <div class="placeholder-page">
+        <div class="ph-title">Lore Journal</div>
+        <div class="ph-sub">// coming soon</div>
+      </div>
+    </div>
+  </main>
+</div>
 
 <script>
 // ═══════════════════════════════════════════════════════
@@ -509,6 +822,247 @@ const MAGAZINES = [
 ];
 
 // ═══════════════════════════════════════════════════════
+// DATA — Schematics (8 categories)
+// ═══════════════════════════════════════════════════════
+
+const SCHEMATICS = [
+  { category: "Armor", items: [
+    'Assemble Articulated Metal Shin Armor',
+    'Assemble Articulated Metal Thigh Armor',
+    'Assemble Forearm Armor',
+    'Assemble Full Metal Forearm Armor',
+    'Assemble Metal Shoulder Armor',
+    'Assemble Metal Thigh Armor',
+    'Assemble Shin Armor',
+    'Carve Large Bone Bead',
+    'Forge Coat of Plates Body Armor',
+    'Forge Codpiece',
+    'Forge Fingerless Metal Gloves',
+    'Forge Metal Body Armor',
+    'Forge Metal Helmet',
+    'Forge Metal Mask',
+    'Forge Metal Neck Guard',
+    'Forge Small Armor Plate',
+    'Make Bone Body Armor',
+    'Make Bone Choker',
+    'Make Bone Forearm Armor',
+    'Make Bone Shin Armor',
+    'Make Bone Shoulder Armor',
+    'Make Bone Thigh Armor',
+    'Make Bulletproof Limb Armor',
+    'Make Gas Mask Filter',
+    'Make Improvised Gas Mask',
+    'Make Magazine Armor',
+    'Make Scrap Metal Body Armor',
+    'Make Scrap Metal Helmet',
+    'Make Scrap Metal Shoulder Armor',
+    'Make Scrap Metal Thigh Armor',
+    'Make Tire Body Armor',
+    'Make Tire Forearm Armor',
+    'Make Tire Shin Armor',
+    'Make Tire Shoulder Armor - Left',
+    'Make Tire Shoulder Armor - Right',
+    'Make Tire Thigh Armor',
+    'Make Wooden Body Armor',
+    'Make Wooden Forearm Armor',
+    'Make Wooden Shin Armor',
+    'Make Wooden Shoulder Armor',
+    'Make Wooden Thigh Armor',
+    'Recharge Filters',
+    'Spike Soft Armor',
+    'Weld Spikes On Metal Armor',
+  ]},
+  { category: "Cookware", items: [
+    'Forge Baking Pan',
+    'Forge Baking Tray',
+    'Forge Cooking Pot',
+    'Forge Frying Pan',
+    'Forge Roasting Pan',
+  ]},
+  { category: "Explosives", items: [
+    'Add Long-Range Motion Sensor to Bomb',
+    'Add Medium-Range Motion Sensor to Bomb',
+    'Add Remote Trigger to Bomb',
+    'Add Short-Range Motion Sensor to Bomb',
+    'Add Timer to Bomb',
+    'Make Aerosol Bomb',
+    'Make Fire Bomb',
+    'Make Noise Maker',
+    'Make Pipe Bomb',
+    'Make Remote Controller (Long-Range)',
+    'Make Remote Controller (Medium-Range)',
+    'Make Remote Controller (Short-Range)',
+    'Make Remote Trigger',
+    'Make Smoke Bomb',
+    'Make Timer',
+  ]},
+  { category: "Melee Weapon", items: [
+    'Barbed-Wire Wrap Weapon',
+    'Bind Spear Head',
+    'Bone Spike Weapon',
+    'Can-Reinforce Weapon',
+    'Carve Bat',
+    'Carve Bone War Hatchet Head',
+    'Carve Short Bat',
+    'Fire Harden Spear',
+    'Forge Crude Sword Blade',
+    'Forge Hunting Knife Blade',
+    'Forge Large Knife Blade',
+    'Forge Long Simple Blade',
+    'Forge Mace Head',
+    'Forge Machete Blade',
+    'Forge Scrap Metal Shortsword',
+    'Forge Short Sword Blade',
+    'Forge Simple Blade',
+    'Forge Simple Shortsword Blade',
+    'Forge Small Knife',
+    'Forge Sword Blade',
+    'Knap Large Stone Axe Head',
+    'Knap Stone Blade',
+    'Knap Stone Maul Head',
+    'Make Bone Club',
+    'Make Brake Disc Weapon',
+    'Make Bucket Maul',
+    'Make Garden Fork Head Weapon',
+    'Make Glass Shiv',
+    'Make Jawbone Axe',
+    'Make Jawbone Club',
+    'Make Jawbone Morningstar',
+    'Make Kettle Maul',
+    'Make Plank with Saw',
+    'Make Rake-Head-Spiked Weapon',
+    'Make Sawblade Wooden Bat',
+    'Make Shiv',
+    'Make Spade Head Cudgel',
+    'Make Spiked Club',
+    'Make Toothbrush Shiv',
+    'Sharpen Bone',
+    'Sheet Metal-Reinforce Weapon',
+  ]},
+  { category: "Cooking", items: [
+    'Make 4 Cabbage Rolls',
+    'Make Cake Batter',
+    'Prepare 2 Breaded Onion Rings',
+    'Prepare Baguette',
+    'Prepare Biscuits',
+    'Prepare Bread Dough',
+    'Prepare Breaded Shrimp',
+    'Prepare Chocolate Chip Cookies',
+    'Prepare Chocolate Cookies',
+    'Prepare Maki',
+    'Prepare Muffins',
+    'Prepare Oatmeal Cookies',
+    'Prepare Onigiri',
+    'Prepare Pie Dough',
+    'Prepare Pizza',
+    'Prepare Shortbread Cookies',
+    'Prepare Sugar Cookies',
+    'Prepare Sushi',
+  ]},
+  { category: "Sewing", items: [
+    'Knit Beanie',
+    'Knit Full Balaclava',
+    'Knit Legwarmers',
+    'Knit Open-Face Balaclava',
+    'Knit Scarf',
+    'Knit Socks',
+    'Knit Sweater Vest',
+    'Knit Wool Hat',
+    'Sew Knee-Length Dress',
+    'Sew Knee-Length Skirt',
+    'Sew Long Dress',
+    'Sew Long Johns',
+    'Sew Long Johns Bottom',
+    'Sew Long Skirt',
+    'Sew Pants',
+    'Sew Shirt',
+    'Sew Sleeveless Shirt',
+  ]},
+  { category: "Survival", items: [
+    'Bind Spear Head',
+    'Carve Bone Awl',
+    'Carve Bone Fishing Hook',
+    'Carve Bone Sewing Needle',
+    'Carve Bucket',
+    'Carve Fleshing Tool',
+    'Carve Knitting Needles',
+    'Carve Wooden Spade',
+    'Fire Harden Spear',
+    'Grind Up Comfrey',
+    'Grind Up Plantain',
+    'Grind Up Wild Garlic',
+    'Knap Flint Saw',
+    'Knap Large Stone Axe Head',
+    'Knap Stone Awl',
+    'Knap Stone Blade',
+    'Knap Stone Blade Scythe',
+    'Knap Stone Chisel',
+    'Knap Stone Drill',
+    'Knap Stone Maul Head',
+    'Make Box Trap',
+    'Make Cage Trap',
+    'Make Crate Trap',
+    'Make Fishing Rod',
+    'Make Gas Mask Filter',
+    'Make Improvised Flashlight',
+    'Make Improvised Gas Mask',
+    'Make Improvised Lantern',
+    'Make Improvised Screwdriver',
+    'Make Improvised Whetstone',
+    'Make Snare Trap',
+    'Make Stick Trap',
+    'Recharge Filters',
+    'Sharpen Bone',
+  ]},
+  { category: "Tool", items: [
+    'Forge 4 Fishing Hooks',
+    'Forge 5 Nails',
+    'Forge Axe Head',
+    'Forge Ball-peen Hammer Head',
+    'Forge Bucket',
+    'Forge Buckle',
+    'Forge Claw Hammer Head',
+    'Forge Club Hammer Head',
+    'Forge Corkscrew',
+    'Forge Crowbar',
+    'Forge Doorknob',
+    'Forge Draw Plate',
+    'Forge Drill',
+    'Forge File',
+    'Forge Fine Scissors',
+    'Forge Fireplace Poker',
+    'Forge Fleshing Tool',
+    'Forge Forceps',
+    'Forge Garden Hoe Head',
+    'Forge Gardening Trowel',
+    'Forge Hand Scythe Head',
+    'Forge Hatchet Head',
+    'Forge Heading Tool',
+    'Forge Hinge',
+    'Forge Jar Lid',
+    'Forge Masonry Chisel',
+    'Forge Masonry Trowel',
+    'Forge Metalworking Chisel',
+    'Forge Metalworking Pliers',
+    'Forge Metalworking Punch',
+    'Forge Needle',
+    'Forge Pick Axe Head',
+    'Forge Saw',
+    'Forge Scissors',
+    'Forge Scythe Head',
+    'Forge Sheep Shears',
+    'Forge Sledgehammer Head',
+    'Forge Smithing Hammer Head',
+    'Forge Spade Head',
+    'Forge Straight Razor',
+    'Forge Tongs',
+    'Forge Tweezers',
+    'Forge Wood Axe Head',
+    'Make Improvised Whetstone',
+  ]},
+];
+
+// ═══════════════════════════════════════════════════════
 // STORAGE (persistent across sessions)
 // ═══════════════════════════════════════════════════════
 
@@ -537,15 +1091,17 @@ let query = '';
 function mid(s) { return s.replace(/[^a-zA-Z0-9]/g, '_'); }
 
 function build() {
-  const el = document.getElementById('content');
-  el.innerHTML = '';
+  const bookEl = document.getElementById('book-content');
+  const magEl  = document.getElementById('mag-content');
+  bookEl.innerHTML = '';
+  magEl.innerHTML  = '';
 
   // ── Skill Books ──
   const bkLbl = document.createElement('div');
   bkLbl.className = 'section-label';
   bkLbl.dataset.sectionType = 'book';
   bkLbl.innerHTML = `<span>Skill Books</span><span class="sc" id="bkSc"></span>`;
-  el.appendChild(bkLbl);
+  bookEl.appendChild(bkLbl);
 
   SKILL_BOOKS.forEach(sg => {
     const groupKey = `collapse_book_${mid(sg.skill)}`;
@@ -568,7 +1124,7 @@ function build() {
       saveState(state);
     });
 
-    el.appendChild(lbl);
+    bookEl.appendChild(lbl);
 
     sg.items.forEach(b => {
       const id = `book_${mid(sg.skill)}_${b.vol}`;
@@ -589,7 +1145,7 @@ function build() {
       itemsDiv.appendChild(it);
     });
 
-    el.appendChild(itemsDiv);
+    bookEl.appendChild(itemsDiv);
   });
 
   // ── Magazines ──
@@ -597,7 +1153,7 @@ function build() {
   mgLbl.className = 'section-label';
   mgLbl.dataset.sectionType = 'mag';
   mgLbl.innerHTML = `<span>Recipe Magazines</span><span class="sc" id="mgSc"></span>`;
-  el.appendChild(mgLbl);
+  magEl.appendChild(mgLbl);
 
   MAGAZINES.forEach(mg => {
     const groupKey = `collapse_mag_${mid(mg.category)}`;
@@ -620,7 +1176,7 @@ function build() {
       saveState(state);
     });
 
-    el.appendChild(lbl);
+    magEl.appendChild(lbl);
 
     mg.items.forEach(m => {
       const id = `mag_${mid(m)}`;
@@ -640,19 +1196,98 @@ function build() {
       itemsDiv.appendChild(it);
     });
 
+    magEl.appendChild(itemsDiv);
+  });
+
+  // ── Reset buttons (one per page) ──
+  function makeReset(container) {
+    const ra = document.createElement('div');
+    ra.className = 'reset-area';
+    ra.innerHTML = `<button class="reset-btn">Reset All Progress</button>`;
+    container.appendChild(ra);
+    ra.querySelector('.reset-btn').addEventListener('click', () => {
+      if (confirm('Reset all checkmarks? This cannot be undone.')) {
+        state = {};
+        saveState(state);
+        build();
+      }
+    });
+  }
+  makeReset(bookEl);
+  makeReset(magEl);
+
+  applyFilters();
+  counts();
+}
+
+function buildSchematics() {
+  const el = document.getElementById('schem-content');
+  el.innerHTML = '';
+
+  // ── Section header ──
+  const scLbl = document.createElement('div');
+  scLbl.className = 'section-label';
+  scLbl.dataset.sectionType = 'schem';
+  scLbl.innerHTML = `<span>Schematics</span><span class="sc" id="schemSc"></span>`;
+  el.appendChild(scLbl);
+
+  SCHEMATICS.forEach(cat => {
+    const groupKey = `collapse_schem_${mid(cat.category)}`;
+    // Default to collapsed
+    const isCollapsed = state[groupKey] !== false;
+
+    const lbl = document.createElement('div');
+    lbl.className = 'skill-label' + (isCollapsed ? ' collapsed' : '');
+    lbl.dataset.skill = cat.category;
+    lbl.dataset.sectionType = 'schem';
+    lbl.textContent = cat.category;
+
+    const itemsDiv = document.createElement('div');
+    itemsDiv.className = 'skill-items' + (isCollapsed ? ' collapsed' : '');
+    itemsDiv.dataset.skill = cat.category;
+
+    lbl.addEventListener('click', () => {
+      const c = lbl.classList.toggle('collapsed');
+      itemsDiv.classList.toggle('collapsed', c);
+      // false = explicitly opened; delete = default collapsed
+      if (!c) state[groupKey] = false; else delete state[groupKey];
+      saveState(state);
+    });
+
+    el.appendChild(lbl);
+
+    cat.items.forEach(s => {
+      const id = `schem_${mid(cat.category)}_${mid(s)}`;
+      const ck = state[id] || false;
+      const it = document.createElement('div');
+      it.className = `item${ck ? ' checked' : ''}`;
+      it.dataset.id = id;
+      it.dataset.type = 'schem';
+      it.dataset.skill = cat.category;
+      it.dataset.search = `${cat.category} ${s}`.toLowerCase();
+      it.innerHTML = `
+        <div class="checkbox">${chk}</div>
+        <div class="item-label">${s}</div>
+        <div class="item-tag tag-schem">SCHEM</div>
+      `;
+      it.addEventListener('click', () => toggle(id, it));
+      itemsDiv.appendChild(it);
+    });
+
     el.appendChild(itemsDiv);
   });
 
   // ── Reset ──
   const ra = document.createElement('div');
   ra.className = 'reset-area';
-  ra.innerHTML = `<button class="reset-btn" id="resetBtn">Reset All Progress</button>`;
+  ra.innerHTML = `<button class="reset-btn">Reset All Progress</button>`;
   el.appendChild(ra);
-  document.getElementById('resetBtn').addEventListener('click', () => {
+  ra.querySelector('.reset-btn').addEventListener('click', () => {
     if (confirm('Reset all checkmarks? This cannot be undone.')) {
       state = {};
       saveState(state);
       build();
+      buildSchematics();
     }
   });
 
@@ -670,18 +1305,21 @@ function toggle(id, el) {
 }
 
 function counts() {
-  let bt=0, bd=0, mt=0, md=0;
+  let bt=0, bd=0, mt=0, md=0, st=0, sd=0;
   document.querySelectorAll('.item').forEach(i => {
-    if (i.dataset.type === 'book') { bt++; if (i.classList.contains('checked')) bd++; }
-    else { mt++; if (i.classList.contains('checked')) md++; }
+    if (i.dataset.type === 'book')        { bt++; if (i.classList.contains('checked')) bd++; }
+    else if (i.dataset.type === 'mag')    { mt++; if (i.classList.contains('checked')) md++; }
+    else if (i.dataset.type === 'schem')  { st++; if (i.classList.contains('checked')) sd++; }
   });
-  document.getElementById('bookCount').textContent = `${bd}/${bt}`;
-  document.getElementById('magCount').textContent = `${md}/${mt}`;
-  document.getElementById('totalCount').textContent = `${bd+md}/${bt+mt}`;
+  document.getElementById('bookCount').textContent  = `${bd}/${bt}`;
+  document.getElementById('magCount').textContent   = `${md}/${mt}`;
+  document.getElementById('schemCount').textContent = `${sd}/${st}`;
   const bs = document.getElementById('bkSc');
   if (bs) bs.innerHTML = `<span class="done">${bd}</span>/${bt}`;
   const ms = document.getElementById('mgSc');
   if (ms) ms.innerHTML = `<span class="done">${md}</span>/${mt}`;
+  const ss = document.getElementById('schemSc');
+  if (ss) ss.innerHTML = `<span class="done">${sd}</span>/${st}`;
 }
 
 function applyFilters() {
@@ -723,13 +1361,205 @@ document.querySelectorAll('.filter-btn').forEach(b => {
   });
 });
 
-document.getElementById('searchBox').addEventListener('input', e => {
+const searchBox = document.getElementById('searchBox');
+searchBox.addEventListener('input', e => {
   query = e.target.value.toLowerCase().trim();
   applyFilters();
 });
 
+document.getElementById('clearSearch').addEventListener('click', () => {
+  searchBox.value = '';
+  query = '';
+  applyFilters();
+  searchBox.focus();
+});
+
+// ═══════════════════════════════════════════════════════
+// SIDEBAR — toggle & page navigation
+// ═══════════════════════════════════════════════════════
+
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebarToggle');
+
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('collapsed');
+});
+
+function updateStats(page) {
+  document.getElementById('statBooks').style.display  = page === 'books'      ? '' : 'none';
+  document.getElementById('statMags').style.display   = page === 'magazines'  ? '' : 'none';
+  document.getElementById('statSchems').style.display = page === 'schematics' ? '' : 'none';
+}
+
+document.querySelectorAll('.nav-item:not(.coming-soon)').forEach(item => {
+  item.addEventListener('click', e => {
+    e.preventDefault();
+    const page = item.dataset.page;
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById('page-' + page);
+    if (target) target.classList.add('active');
+    updateStats(page);
+  });
+});
+
+// Show books stat on initial load
+updateStats('books');
+
+// ═══════════════════════════════════════════════════════
+// EDITABLE TODO LISTS — Adventure Gear & Chores
+// ═══════════════════════════════════════════════════════
+
+const GEAR_SK   = 'pz-gear-items';
+const CHORES_SK = 'pz-chores-items';
+
+const GEAR_DEFAULTS = {
+  Daily: [
+    { id: 'food',  label: 'Food',  sub: 'Did you eat today?' },
+    { id: 'water', label: 'Water', sub: 'Stay hydrated! A liter or more is best!' },
+  ],
+  Weekly: [
+    { id: 'primary_weapon',    label: 'Primary Weapon',    sub: 'Is it fresh or should you grab your spare?' },
+    { id: 'spare_weapon',      label: 'Spare Weapon',      sub: 'Just in case...' },
+    { id: 'one_handed_weapon', label: 'One Handed Weapon', sub: 'Ya know, if you need to hold a flashlight in your offhand' },
+    { id: 'flashlight',        label: 'Flashlight',        sub: 'With batteries that work!' },
+  ],
+  Monthly: [],
+};
+
+const CHORES_DEFAULTS = {
+  Daily: [
+    { id: 'cook_food',     label: 'Cook Food',     sub: 'Or like, make sure you got something ready to eat' },
+    { id: 'check_animals', label: 'Check Animals', sub: 'Chickens and eggs, cows and milk... whatever you got' },
+  ],
+  Weekly: [
+    { id: 'generator_care', label: 'Generator Care', sub: 'Could end up being a full gas station... always repair when you fuel' },
+    { id: 'car_care',       label: 'Car Care',       sub: "You been putting in a lot of miles? Remember check the tires and lights" },
+    { id: 'self_care',      label: 'Self Care',      sub: 'Shave and bathe hippy!' },
+    { id: 'crop_care',      label: 'Crop Care',      sub: 'Water and cures for all' },
+  ],
+  Monthly: [],
+};
+
+const CHORES_MONTHLY_TEXT = `Not really a check list, but once in a while, perhaps while your character reads a good book on your favorite MP server, ask what's working and what isn't? What is annoying, like running across your base every time you need a lightbulb, or some ammo, and what is working really well, like having all your like crafting items (and tools!) in one spot to get it all done. Is it time to build that room addition to start tanning leather? Need a new chicken pen because you're about to have one too many roosters? Things are great but you're low on sleeping pills for when the scaries come? Give it some thought and start planning your next moves!`;
+
+function loadTodoItems(sk, defaults) {
+  try {
+    const stored = localStorage.getItem(sk);
+    if (stored) return JSON.parse(stored);
+  } catch {}
+  const out = {};
+  for (const p in defaults) out[p] = defaults[p].map(i => ({ ...i }));
+  return out;
+}
+function saveTodoItems(sk, data) { localStorage.setItem(sk, JSON.stringify(data)); }
+
+function renderTodoList(elId, sk, defaults, prefix, monthlyReflection) {
+  const data = loadTodoItems(sk, defaults);
+  const periods = Object.keys(defaults);
+  periods.forEach(p => { if (!data[p]) data[p] = []; });
+
+  function render() {
+    const el = document.getElementById(elId);
+    el.innerHTML = '';
+
+    periods.forEach(period => {
+      const items = data[period];
+
+      const periodEl = document.createElement('div');
+      periodEl.className = 'todo-period';
+      periodEl.textContent = period;
+      el.appendChild(periodEl);
+
+      // Optional reflection paragraph (Chores Monthly)
+      if (period === 'Monthly' && monthlyReflection) {
+        const ref = document.createElement('div');
+        ref.className = 'todo-reflection';
+        ref.textContent = monthlyReflection;
+        el.appendChild(ref);
+      }
+
+      // Render items
+      items.forEach((item, idx) => {
+        const stateId = `${prefix}_${item.id}`;
+        const ck = state[stateId] || false;
+        const row = document.createElement('div');
+        row.className = `item${ck ? ' checked' : ''}`;
+        row.dataset.id = stateId;
+        row.dataset.type = prefix;
+        row.innerHTML = `
+          <div class="checkbox">${chk}</div>
+          <div class="item-body">
+            <div class="item-label">${item.label}</div>
+            ${item.sub ? `<div class="item-sub">${item.sub}</div>` : ''}
+          </div>
+          <button class="todo-delete-btn" title="Remove">&#x2715;</button>
+        `;
+
+        row.addEventListener('click', e => {
+          if (e.target.closest('.todo-delete-btn')) return;
+          state[stateId] = !state[stateId];
+          if (!state[stateId]) delete state[stateId];
+          saveState(state);
+          row.classList.toggle('checked');
+        });
+
+        row.querySelector('.todo-delete-btn').addEventListener('click', e => {
+          e.stopPropagation();
+          delete state[stateId];
+          saveState(state);
+          items.splice(idx, 1);
+          saveTodoItems(sk, data);
+          render();
+        });
+
+        el.appendChild(row);
+      });
+
+      // Add-item row
+      const addRow = document.createElement('div');
+      addRow.className = 'todo-add-row';
+      addRow.innerHTML = `
+        <input type="text" class="todo-add-input input-label" placeholder="Item name...">
+        <input type="text" class="todo-add-input input-sub"   placeholder="Flavor text, e.g. &quot;Don't forget the ammo!&quot; (optional)">
+        <button class="todo-add-btn">+ Add</button>
+      `;
+      el.appendChild(addRow);
+
+      const inputLabel = addRow.querySelector('.input-label');
+      const inputSub   = addRow.querySelector('.input-sub');
+      const btn        = addRow.querySelector('.todo-add-btn');
+
+      const doAdd = () => {
+        const label = inputLabel.value.trim();
+        if (!label) return;
+        const sub = inputSub.value.trim();
+        items.push({ id: 'custom_' + Date.now(), label, sub });
+        saveTodoItems(sk, data);
+        render();
+      };
+      btn.addEventListener('click', doAdd);
+      [inputLabel, inputSub].forEach(inp => inp.addEventListener('keydown', e => { if (e.key === 'Enter') doAdd(); }));
+    });
+  }
+
+  render();
+}
+
+function buildAdventureGear() {
+  renderTodoList('gear-content', GEAR_SK, GEAR_DEFAULTS, 'gear', null);
+}
+
+function buildChores() {
+  renderTodoList('chores-content', CHORES_SK, CHORES_DEFAULTS, 'chore', CHORES_MONTHLY_TEXT);
+}
+
 state = loadState();
 build();
+buildSchematics();
+buildAdventureGear();
+buildChores();
 </script>
 </body>
 </html>
