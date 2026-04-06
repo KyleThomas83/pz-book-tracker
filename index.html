@@ -1508,14 +1508,6 @@ function renderTodoList(elId, sk, defaults, prefix, monthlyReflection) {
       periodEl.textContent = period;
       el.appendChild(periodEl);
 
-      // Optional reflection paragraph (Chores Monthly)
-      if (period === 'Monthly' && monthlyReflection) {
-        const ref = document.createElement('div');
-        ref.className = 'todo-reflection';
-        ref.textContent = monthlyReflection;
-        el.appendChild(ref);
-      }
-
       // Render items
       items.forEach((item, idx) => {
         const stateId = `${prefix}_${item.id}`;
@@ -1577,6 +1569,14 @@ function renderTodoList(elId, sk, defaults, prefix, monthlyReflection) {
       };
       btn.addEventListener('click', doAdd);
       [inputLabel, inputSub].forEach(inp => inp.addEventListener('keydown', e => { if (e.key === 'Enter') doAdd(); }));
+
+      // Optional reflection paragraph (Chores Monthly) — after items
+      if (period === 'Monthly' && monthlyReflection) {
+        const ref = document.createElement('div');
+        ref.className = 'todo-reflection';
+        ref.textContent = monthlyReflection;
+        el.appendChild(ref);
+      }
     });
   }
 
