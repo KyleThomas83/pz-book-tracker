@@ -42,42 +42,25 @@
   .header {
     background: var(--paper);
     border-bottom: 2px solid var(--ink-faint);
-    padding: 20px 24px;
+    padding: 12px 16px;
     flex-shrink: 0;
     z-index: 100;
   }
-  .header-top {
-    display: flex; align-items: baseline; justify-content: space-between;
-    flex-wrap: wrap; gap: 12px;
-  }
   .header h1 {
     font-family: 'Special Elite', cursive;
-    font-size: 1.6rem; color: var(--ink);
+    font-size: 1.1rem; color: var(--ink);
     letter-spacing: 1px; font-weight: normal;
+    margin: 0 0 8px 0;
   }
   .header h1 span { color: var(--ink-dim); font-size: 0.75em; }
-  .stats {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 0.8rem; color: var(--ink-dim);
-    display: flex; gap: 16px; flex-wrap: wrap;
-  }
-  .stats .count { color: var(--amber); font-weight: 600; }
   .controls {
-    display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+    display: flex; gap: 8px; align-items: center;
   }
-  .filter-btn {
-    font-family: 'Source Code Pro', monospace;
-    font-size: 0.75rem; padding: 4px 10px;
-    background: var(--paper-light); border: 1px solid var(--ink-faint);
-    color: var(--ink-dim); cursor: pointer; transition: all 0.15s;
-  }
-  .filter-btn:hover { border-color: var(--ink-dim); color: var(--ink); }
-  .filter-btn.active { background: var(--ink-faint); color: var(--ink); border-color: var(--ink-dim); }
   .search-box {
     font-family: 'Source Code Pro', monospace;
     font-size: 0.75rem; padding: 4px 10px;
     background: var(--bg); border: 1px solid var(--ink-faint);
-    color: var(--ink); width: 200px; outline: none;
+    color: var(--ink); flex: 1; min-width: 80px; outline: none;
   }
   .search-box::placeholder { color: var(--ink-faint); }
   .search-box:focus { border-color: var(--amber-dim); }
@@ -138,7 +121,9 @@
   .item-vol {
     font-family: 'Source Code Pro', monospace;
     font-size: 0.7rem; color: var(--ink-faint);
-    min-width: 80px; flex-shrink: 0;
+    min-width: 48px; flex-shrink: 0;
+    display: flex; flex-direction: column;
+    align-items: center; line-height: 1.3;
   }
   .item.checked .item-vol { color: var(--ink-faint); }
 
@@ -323,6 +308,48 @@
   }
   .sidebar-toggle:hover { border-color: var(--ink-dim); color: var(--ink); }
 
+  /* ── Filter toggle + popup ── */
+  .filter-wrap { position: relative; }
+  .filter-toggle {
+    background: transparent;
+    border: 1px solid var(--ink-faint);
+    color: var(--ink-dim);
+    cursor: pointer;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.75rem;
+    padding: 4px 9px;
+    line-height: 1;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-toggle:hover { border-color: var(--ink-dim); color: var(--ink); }
+  .filter-popup {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    background: var(--paper);
+    border: 1px solid var(--ink-faint);
+    z-index: 200;
+    flex-direction: column;
+    min-width: 120px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  .filter-popup.open { display: flex; }
+  .filter-opt {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.75rem;
+    padding: 8px 14px;
+    background: transparent;
+    border: none;
+    color: var(--ink-dim);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+  }
+  .filter-opt:hover { background: var(--ink-faint); color: var(--ink); }
+  .filter-opt.active { color: var(--amber); }
+
   /* ── Clear search button ── */
   .clear-btn {
     font-family: 'Source Code Pro', monospace;
@@ -417,21 +444,17 @@
 <body>
 
 <div class="header">
-  <div class="header-top">
-    <div style="display:flex;align-items:center;gap:12px;">
-      <button class="sidebar-toggle" id="sidebarToggle" title="Toggle navigation">&#9776;</button>
-      <h1>Project Zomboid PDA <span>// Build 42</span></h1>
-    </div>
-    <div class="stats" id="headerStats">
-      <span id="statBooks">Books: <span class="count" id="bookCount">0/0</span></span>
-      <span id="statMags">Magazines: <span class="count" id="magCount">0/0</span></span>
-      <span id="statSchems">Schematics: <span class="count" id="schemCount">0/0</span></span>
-    </div>
-  </div>
+  <h1>Project Zomboid PDA <span>// Build 42</span></h1>
   <div class="controls">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="unchecked">Remaining</button>
-    <button class="filter-btn" data-filter="checked">Found</button>
+    <button class="sidebar-toggle" id="sidebarToggle" title="Toggle navigation">&#9776;</button>
+    <div class="filter-wrap">
+      <button class="filter-toggle" id="filterToggle" title="Filter items">All &#9662;</button>
+      <div class="filter-popup" id="filterPopup">
+        <button class="filter-opt active" data-filter="all">All</button>
+        <button class="filter-opt" data-filter="unchecked">Remaining</button>
+        <button class="filter-opt" data-filter="checked">Found</button>
+      </div>
+    </div>
     <input type="text" class="search-box" placeholder="Search..." id="searchBox">
     <button class="clear-btn" id="clearSearch" title="Clear search">&#x2715;</button>
   </div>
@@ -442,26 +465,26 @@
 
     <div class="sidebar-nav-label">To Do List</div>
     <a class="nav-item" data-page="adventure-gear" href="#">
-      <span class="nav-icon"><img src="Hatchet.png" alt="Adventure Gear"></span>
+      <span class="nav-icon"><img src="icons/Hatchet.png" alt="Adventure Gear"></span>
       <span class="nav-text">Adventure Gear</span>
     </a>
     <a class="nav-item" data-page="chores" href="#">
-      <span class="nav-icon"><img src="bucket.png" alt="Chores"></span>
+      <span class="nav-icon"><img src="icons/bucket.png" alt="Chores"></span>
       <span class="nav-text">Chores</span>
     </a>
 
     <div class="nav-divider"></div>
     <div class="sidebar-nav-label">Stuff</div>
     <a class="nav-item active" data-page="books" href="#">
-      <span class="nav-icon"><img src="Book.png" alt="Books"></span>
+      <span class="nav-icon"><img src="icons/Book.png" alt="Books"></span>
       <span class="nav-text">Skill Books</span>
     </a>
     <a class="nav-item" data-page="magazines" href="#">
-      <span class="nav-icon"><img src="mag.png" alt="Magazines"></span>
+      <span class="nav-icon"><img src="icons/mag.png" alt="Magazines"></span>
       <span class="nav-text">Magazines</span>
     </a>
     <a class="nav-item" data-page="schematics" href="#">
-      <span class="nav-icon"><img src="Schem.png" alt="Schematics"></span>
+      <span class="nav-icon"><img src="icons/Schem.png" alt="Schematics"></span>
       <span class="nav-text">Schematics</span>
     </a>
 
@@ -1137,8 +1160,11 @@ function build() {
       it.dataset.search = `${sg.skill} ${b.title} ${b.levels}`.toLowerCase();
       it.innerHTML = `
         <div class="checkbox">${chk}</div>
-        <div class="item-vol">Vol. ${b.vol} (${b.levels})</div>
-        <div class="item-label">${sg.skill} ${roman[b.vol-1]}: "${b.title}"</div>
+        <div class="item-vol"><span>Vol. ${b.vol}</span><span>(${b.levels})</span></div>
+        <div class="item-body">
+          <div class="item-label">${sg.skill} ${roman[b.vol-1]}</div>
+          <div class="item-sub">"${b.title}"</div>
+        </div>
         <div class="item-tag tag-book">BOOK</div>
       `;
       it.addEventListener('click', () => toggle(id, it));
@@ -1311,9 +1337,6 @@ function counts() {
     else if (i.dataset.type === 'mag')    { mt++; if (i.classList.contains('checked')) md++; }
     else if (i.dataset.type === 'schem')  { st++; if (i.classList.contains('checked')) sd++; }
   });
-  document.getElementById('bookCount').textContent  = `${bd}/${bt}`;
-  document.getElementById('magCount').textContent   = `${md}/${mt}`;
-  document.getElementById('schemCount').textContent = `${sd}/${st}`;
   const bs = document.getElementById('bkSc');
   if (bs) bs.innerHTML = `<span class="done">${bd}</span>/${bt}`;
   const ms = document.getElementById('mgSc');
@@ -1352,13 +1375,29 @@ function applyFilters() {
   });
 }
 
-document.querySelectorAll('.filter-btn').forEach(b => {
-  b.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
+const filterToggle = document.getElementById('filterToggle');
+const filterPopup = document.getElementById('filterPopup');
+const filterLabels = { all: 'All', unchecked: 'Remaining', checked: 'Found' };
+
+filterToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  filterPopup.classList.toggle('open');
+});
+
+document.querySelectorAll('.filter-opt').forEach(b => {
+  b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    document.querySelectorAll('.filter-opt').forEach(x => x.classList.remove('active'));
     b.classList.add('active');
     filter = b.dataset.filter;
+    filterToggle.innerHTML = filterLabels[filter] + ' &#9662;';
+    filterPopup.classList.remove('open');
     applyFilters();
   });
+});
+
+document.addEventListener('click', () => {
+  filterPopup.classList.remove('open');
 });
 
 const searchBox = document.getElementById('searchBox');
@@ -1386,9 +1425,6 @@ sidebarToggle.addEventListener('click', () => {
 });
 
 function updateStats(page) {
-  document.getElementById('statBooks').style.display  = page === 'books'      ? '' : 'none';
-  document.getElementById('statMags').style.display   = page === 'magazines'  ? '' : 'none';
-  document.getElementById('statSchems').style.display = page === 'schematics' ? '' : 'none';
 }
 
 document.querySelectorAll('.nav-item:not(.coming-soon)').forEach(item => {
