@@ -17,7 +17,12 @@ and the header carries a search box and a filter (All / Remaining / Found).
 | --- | --- |
 | Skill Books | 120 volumes, 24 skills, five volumes each, grouped by skill and labelled with the level range they cover |
 | Magazines | 87 recipe magazines grouped by category |
-| Schematics | Craftable recipes that have to be learned rather than levelled into, grouped by category and collapsed by default |
+| Learned Recipes | 345 recipes you cannot level into, grouped by the game's own recipe category and collapsed by default |
+
+Every row on Learned Recipes names its source. If a magazine teaches it, that magazine
+is listed under the recipe and the row is tagged `MAG`. If nothing teaches it, the row
+is tagged `SCHEM` and can only come from one of the eight schematic items. 55 of the
+345 fall into that second group.
 
 **To Do List**
 
@@ -68,11 +73,17 @@ Schematics pages clears `pz-tracker-v4` entirely, which includes your to-do tick
 
 ## Keeping the data current
 
-The three lists are hardcoded as `SKILL_BOOKS`, `MAGAZINES` and `SCHEMATICS`
-near the top of the script block in `index.html`.
+`SKILL_BOOKS` and `MAGAZINES` are hand-maintained near the top of the script block in
+`index.html`. `LEARNED_RECIPES` is **generated** and sits between marker comments. Do
+not edit it by hand.
 
-When a new Build 42 patch lands, regenerate the diff against your own game install
-rather than editing by hand:
+When a new Build 42 patch lands, regenerate rather than editing:
+
+```bash
+node tools/gen-learned-recipes.mjs
+```
+
+Then check the other two lists against your install:
 
 ```bash
 node tools/diff-vs-game.mjs out/diff.md
@@ -91,8 +102,9 @@ gh issue list
 ## Layout
 
 ```
-index.html              the whole app
-icons/                  sidebar sprites
-tools/diff-vs-game.mjs  compares the app's lists against an installed copy of the game
-docs/UPDATING.md        how to refresh the lists for a new build
+index.html                    the whole app
+icons/                        sidebar sprites
+tools/gen-learned-recipes.mjs regenerates LEARNED_RECIPES from an installed copy of the game
+tools/diff-vs-game.mjs        checks the books and magazines lists against the same source
+docs/UPDATING.md              how to refresh the lists for a new build
 ```

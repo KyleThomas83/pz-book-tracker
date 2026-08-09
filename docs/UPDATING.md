@@ -61,11 +61,41 @@ splits them cleanly:
 - taught by a literature item, so already covered by the Magazines page
 - taught by nothing, so it must come from one of the six schematic items
 
-## Running the diff
+## Regenerating the recipe list
+
+`LEARNED_RECIPES` in `index.html` is generated, and lives between these markers:
+
+```
+// >>> GENERATED: learned recipes <<<
+// >>> END GENERATED <<<
+```
+
+Rewrite it from the install with:
+
+```bash
+node tools/gen-learned-recipes.mjs
+```
+
+The generator only touches the marked region, so it is safe to run repeatedly. It
+takes every recipe flagged `NeedToBeLearn = true`, groups them by the game's own
+`category` field, and records which literature items teach each one so the app can
+show the source on the row.
+
+Ticks are keyed on the game's recipe ID (`schem_<RecipeId>`), not on the display name,
+so a recipe being renamed upstream no longer orphans your progress. If a rename does
+happen, add it to the `RENAMES` map at the top of the generator.
+
+`SCHEM_KEY_MIGRATION` in `index.html` is a one-time artefact from the move off the old
+category-scoped keys. It is not regenerated and can be deleted once everyone has
+loaded the app at least once.
+
+## Running the books and magazines diff
 
 ```bash
 node tools/diff-vs-game.mjs out/diff.md
 ```
+
+This still covers `SKILL_BOOKS` and `MAGAZINES`, which are hand-maintained.
 
 Pass a different install path as a second argument, or set `PZ_DIR`. The script needs
 no dependencies. It parses the arrays straight out of `index.html`, so it always
